@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>EcoMarket — Sustainable Living</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showPage('home')">
+      <img src="/favicon.svg" width="28" alt=""/>
+      <span>EcoMarket</span>
+    </a>
+    <div class="nav-links">
+      <a href="#" onclick="showPage('home')">Home</a>
+      <a href="#" onclick="showPage('shop')">Shop</a>
+      <a href="#" onclick="showPage('carbon')">Carbon Calc</a>
+      <a href="#" onclick="showPage('recycle')">Recycle</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-icon" onclick="toggleSearch()" title="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="btn-icon" onclick="showPage('wishlist')" title="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span class="cart-badge" id="wishBadge" style="display:none">0</span>
+      </button>
+      <button class="btn-icon" onclick="toggleCart()" title="Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+      <button class="btn-icon" onclick="toggleUserMenu()" id="userBtn" title="Account">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="nav-search" id="navSearch">
+    <input type="text" id="navSearchInput" placeholder="Search eco-friendly products..." oninput="liveSearch(this.value)"/>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+  <div class="user-dropdown" id="userDropdown">
+    <div id="loggedOutMenu">
+      <button onclick="showPage('login')">Sign In</button>
+      <button onclick="showPage('register')">Create Account</button>
+    </div>
+    <div id="loggedInMenu" style="display:none">
+      <div class="dropdown-user-info" id="dropdownUserInfo"></div>
+      <button onclick="showPage('profile')">My Profile</button>
+      <button onclick="showPage('orders')">My Orders</button>
+      <button onclick="showPage('wishlist')">Wishlist</button>
+      <button onclick="showPage('referral')">Refer a Friend</button>
+      <button onclick="showPage('admin')" id="adminNavBtn" style="display:none">Admin Dashboard</button>
+      <button onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+</nav>
+
+<main id="app">
+
+<div id="page-home" class="page active">
+  <section class="hero-slider">
+    <div class="slide active" style="--bg:url('https://picsum.photos/id/1043/1400/700')"><div class="slide-overlay"></div><div class="slide-content"><div class="hero-badge animate-in">🌱 Certified Sustainable</div><h1 class="hero-title animate-in">Shop With<br/><em>Purpose.</em></h1><p class="hero-sub animate-in">Every product vetted for environmental impact.</p><div class="hero-actions animate-in"><button class="btn-primary" onclick="showPage('shop')">Explore Products</button><button class="btn-ghost-white" onclick="showPage('carbon')">Check Your Carbon</button></div></div></div>
+    <div class="slide" style="--bg:url('https://picsum.photos/id/1018/1400/700')"><div class="slide-overlay"></div><div class="slide-content"><div class="hero-badge animate-in">♻️ Zero Waste Living</div><h1 class="hero-title animate-in">Every Choice<br/><em>Matters.</em></h1><p class="hero-sub animate-in">Join 50,000+ eco-conscious shoppers.</p><div class="hero-actions animate-in"><button class="btn-primary" onclick="showPage('recycle')">Recycle and Earn</button><button class="btn-ghost-white" onclick="showPage('shop')">Shop Now</button></div></div></div>
+    <div class="slide" style="--bg:url('https://picsum.photos/id/28/1400/700')"><div class="slide-overlay"></div><div class="slide-content"><div class="hero-badge animate-in">🌍 Carbon Neutral</div><h1 class="hero-title animate-in">Good For You.<br/><em>Great For Earth.</em></h1><p class="hero-sub animate-in">Calculate your footprint, make simple swaps.</p><div class="hero-actions animate-in"><button class="btn-primary" onclick="showPage('carbon')">Calculate Now</button><button class="btn-ghost-white" onclick="showPage('shop')">Browse Products</button></div></div></div>
+    <button class="slider-btn slider-prev" onclick="slideChange(-1)">&#8592;</button>
+    <button class="slider-btn slider-next" onclick="slideChange(1)">&#8594;</button>
+    <div class="slider-dots"><span class="dot active" onclick="goToSlide(0)"></span><span class="dot" onclick="goToSlide(1)"></span><span class="dot" onclick="goToSlide(2)"></span></div>
+    <div class="hero-stats-bar">
+      <div class="stat-item"><strong>12,840+</strong><span>Trees Saved</span></div>
+      <div class="stat-item"><strong>50,000+</strong><span>Happy Shoppers</span></div>
+      <div class="stat-item"><strong>94%</strong><span>Eco Certified</span></div>
+      <div class="stat-item"><strong>Carbon</strong><span>Offset Shipping</span></div>
+    </div>
+  </section>
+
+  <div class="flash-banner" id="flashBanner">
+    <span>⚡ Flash Sale! Use code <strong>SAVE20</strong> for 20% off orders over $50</span>
+    <div class="flash-timer" id="flashTimer"></div>
+    <button onclick="document.getElementById('flashBanner').style.display='none'">✕</button>
+  </div>
+
+  <section class="features">
+    <div class="feature-card"><div class="feature-icon">🌍</div><h3>Carbon Neutral</h3><p>Every order offset through verified reforestation.</p></div>
+    <div class="feature-card"><div class="feature-icon">♻️</div><h3>Recycle and Earn</h3><p>Send old items, earn Eco Points.</p></div>
+    <div class="feature-card"><div class="feature-icon">📦</div><h3>Zero-Waste Shipping</h3><p>All packaging compostable or 100% recycled.</p></div>
+    <div class="feature-card"><div class="feature-icon">✅</div><h3>Vetted Products</h3><p>Every supplier passes our 40-point audit.</p></div>
+  </section>
+
+  <section class="featured-products">
+    <div class="section-header">
+      <h2>Trending Now</h2>
+      <div class="section-tabs">
+        <button class="tab-btn active" onclick="loadFeatured('rating',this)">Top Rated</button>
+        <button class="tab-btn" onclick="loadFeatured('eco',this)">Most Eco</button>
+        <button class="tab-btn" onclick="loadFeatured('price_asc',this)">Best Value</button>
+      </div>
+    </div>
+    <div class="product-grid" id="featuredGrid"></div>
+    <button class="btn-primary" onclick="showPage('shop')" style="margin:2rem auto;display:block">View All Products</button>
+  </section>
+
+  <section class="impact-counter">
+    <h2>Our Community Impact</h2>
+    <div class="counters">
+      <div class="counter-item"><div class="counter" data-target="12840">0</div><span>Trees Planted</span></div>
+      <div class="counter-item"><div class="counter" data-target="48200">0</div><span>kg CO2 Offset</span></div>
+      <div class="counter-item"><div class="counter" data-target="50000">0</div><span>Happy Shoppers</span></div>
+      <div class="counter-item"><div class="counter" data-target="9200">0</div><span>Items Recycled</span></div>
+    </div>
+  </section>
+
+  <section class="impact-banner">
+    <div class="impact-content">
+      <h2>Your Footprint, Calculated</h2>
+      <p>Use our free carbon calculator to understand your impact.</p>
+      <button class="btn-white" onclick="showPage('carbon')">Try Carbon Calculator</button>
+    </div>
+  </section>
+
+  <section class="newsletter-section">
+    <div class="newsletter-inner">
+      <div class="newsletter-text">
+        <div class="newsletter-icon">🌿</div>
+        <h2>Join the Green Revolution</h2>
+        <p>Get exclusive eco tips and a <strong>10% discount</strong> on your first order.</p>
+        <ul class="newsletter-perks">
+          <li>Weekly sustainability tips</li>
+          <li>Early access to new products</li>
+          <li>Exclusive member discounts</li>
+        </ul>
+      </div>
+      <div class="newsletter-form-wrap">
+        <div id="newsletterSuccess" style="display:none" class="newsletter-success">
+          <div style="font-size:3rem">🎉</div><h3>You are in!</h3>
+          <p>Your discount code:</p>
+          <div class="discount-code-box" id="discountCodeBox"></div>
+        </div>
+        <form id="newsletterForm" onsubmit="subscribeNewsletter(event)">
+          <h3>Subscribe for Free</h3>
+          <input type="text" id="nlName" placeholder="Your name" required/>
+          <input type="email" id="nlEmail" placeholder="Your email address" required/>
+          <button type="submit" class="btn-primary">Get My 10% Discount</button>
+          <p class="nl-disclaimer">No spam, ever.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="page-shop" class="page">
+  <div class="shop-header">
+    <h1>Shop Sustainably</h1>
+    <div class="shop-controls">
+      <div class="search-bar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()"/></div>
+      <select id="sortSelect" onchange="filterProducts()"><option value="">Sort by</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option><option value="rating">Top Rated</option><option value="eco">Lowest Carbon</option></select>
+    </div>
+  </div>
+  <div class="shop-layout">
+    <aside class="shop-sidebar">
+      <h3>Categories</h3><div id="categoryFilters"></div>
+      <hr/><h3>Price Range</h3>
+      <div class="price-range"><input type="range" id="maxPrice" min="10" max="500" value="500" oninput="filterProducts()"/><span>Up to $<span id="priceLabel">500</span></span></div>
+    </aside>
+    <div class="products-area">
+      <div class="products-toolbar">
+        <p id="productCount" class="product-count"></p>
+        <div class="view-toggle"><button onclick="setView('grid')" id="viewGrid" class="view-btn active">Grid</button><button onclick="setView('list')" id="viewList" class="view-btn">List</button></div>
+      </div>
+      <div class="product-grid" id="shopGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-product" class="page"><div id="productDetail"></div></div>
+
+<div id="page-wishlist" class="page">
+  <div class="wishlist-wrapper">
+    <h1>My Wishlist</h1>
+    <div class="product-grid" id="wishlistGrid"></div>
+    <div id="wishlistEmpty" style="display:none" class="empty-state"><p style="font-size:3rem">♥</p><p>Your wishlist is empty</p><button class="btn-primary" onclick="showPage('shop')" style="margin-top:16px">Discover Products</button></div>
+  </div>
+</div>
+
+<div id="page-carbon" class="page">
+  <div class="carbon-page">
+
+    <!-- ANIMATED EARTH HERO -->
+    <div class="carbon-hero">
+      <div class="carbon-hero-bg">
+        <div class="earth-ring ring-1"></div>
+        <div class="earth-ring ring-2"></div>
+        <div class="earth-ring ring-3"></div>
+        <div class="earth-globe">🌍</div>
+      </div>
+      <div class="carbon-hero-text">
+        <h1>How Big Is Your<br/><em>Carbon Footprint?</em></h1>
+        <p>Answer 4 quick questions and discover your annual CO₂ impact — then see how to reduce it.</p>
+        <div class="carbon-hero-stats">
+          <div class="ch-stat"><span>4,000 kg</span><small>Global Average</small></div>
+          <div class="ch-stat"><span>2 min</span><small>To Complete</small></div>
+          <div class="ch-stat"><span>Free</span><small>Carbon Offset Tips</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP WIZARD -->
+    <div class="carbon-wizard">
+
+      <!-- Progress Bar -->
+      <div class="wizard-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="wizardProgress" style="width:25%"></div>
+        </div>
+        <div class="progress-steps">
+          <div class="prog-step active" id="pstep1"><div class="prog-dot">🚗</div><span>Transport</span></div>
+          <div class="prog-step" id="pstep2"><div class="prog-dot">🥗</div><span>Diet</span></div>
+          <div class="prog-step" id="pstep3"><div class="prog-dot">🏠</div><span>Home</span></div>
+          <div class="prog-step" id="pstep4"><div class="prog-dot">📊</div><span>Results</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 1: TRANSPORT -->
+      <div class="wizard-step active" id="wstep1">
+        <div class="step-header">
+          <div class="step-emoji">🚗</div>
+          <h2>How do you get around?</h2>
+          <p>Your daily commute is often the biggest contributor to your carbon footprint.</p>
+        </div>
+        <div class="transport-options">
+          <label class="transport-card selected" onclick="selectTransport('car', this)">
+            <div class="tc-icon">🚗</div>
+            <div class="tc-label">Car</div>
+            <div class="tc-impact high">High Impact</div>
+            <input type="radio" name="transport" value="car" checked hidden/>
+          </label>
+          <label class="transport-card" onclick="selectTransport('bus', this)">
+            <div class="tc-icon">🚌</div>
+            <div class="tc-label">Bus</div>
+            <div class="tc-impact medium">Medium</div>
+            <input type="radio" name="transport" value="bus" hidden/>
+          </label>
+          <label class="transport-card" onclick="selectTransport('train', this)">
+            <div class="tc-icon">🚆</div>
+            <div class="tc-label">Train</div>
+            <div class="tc-impact low">Low</div>
+            <input type="radio" name="transport" value="train" hidden/>
+          </label>
+          <label class="transport-card" onclick="selectTransport('plane', this)">
+            <div class="tc-icon">✈️</div>
+            <div class="tc-label">Plane</div>
+            <div class="tc-impact high">Very High</div>
+            <input type="radio" name="transport" value="plane" hidden/>
+          </label>
+          <label class="transport-card" onclick="selectTransport('bike', this)">
+            <div class="tc-icon">🚲</div>
+            <div class="tc-label">Bicycle</div>
+            <div class="tc-impact zero">Zero</div>
+            <input type="radio" name="transport" value="bike" hidden/>
+          </label>
+          <label class="transport-card" onclick="selectTransport('walk', this)">
+            <div class="tc-icon">🚶</div>
+            <div class="tc-label">Walk</div>
+            <div class="tc-impact zero">Zero</div>
+            <input type="radio" name="transport" value="walk" hidden/>
+          </label>
+        </div>
+        <div class="distance-slider-wrap">
+          <label>Daily commute distance: <strong id="distanceVal">20 km</strong></label>
+          <input type="range" id="calcDistance" min="0" max="200" value="20" class="eco-slider" oninput="document.getElementById('distanceVal').textContent=this.value+' km'"/>
+          <div class="slider-labels"><span>0 km</span><span>100 km</span><span>200 km</span></div>
+        </div>
+        <button class="wizard-next-btn" onclick="wizardNext(2)">Next: Diet →</button>
+      </div>
+
+      <!-- STEP 2: DIET -->
+      <div class="wizard-step" id="wstep2">
+        <div class="step-header">
+          <div class="step-emoji">🥗</div>
+          <h2>What's on your plate?</h2>
+          <p>Food accounts for up to 30% of an average household's carbon footprint.</p>
+        </div>
+        <div class="diet-options">
+          <label class="diet-card" onclick="selectDiet('vegan', this)">
+            <div class="diet-icon">🌱</div>
+            <div class="diet-info">
+              <strong>Vegan</strong>
+              <p>Plant-based only</p>
+            </div>
+            <div class="diet-co2"><span>1.5t</span><small>CO₂/yr</small></div>
+            <div class="diet-bar" style="--pct:30%"></div>
+            <input type="radio" name="diet" value="vegan" hidden/>
+          </label>
+          <label class="diet-card" onclick="selectDiet('vegetarian', this)">
+            <div class="diet-icon">🥕</div>
+            <div class="diet-info"><strong>Vegetarian</strong><p>No meat</p></div>
+            <div class="diet-co2"><span>1.7t</span><small>CO₂/yr</small></div>
+            <div class="diet-bar" style="--pct:36%"></div>
+            <input type="radio" name="diet" value="vegetarian" hidden/>
+          </label>
+          <label class="diet-card" onclick="selectDiet('flexitarian', this)">
+            <div class="diet-icon">🥗</div>
+            <div class="diet-info"><strong>Flexitarian</strong><p>Mostly plants</p></div>
+            <div class="diet-co2"><span>2.5t</span><small>CO₂/yr</small></div>
+            <div class="diet-bar" style="--pct:54%"></div>
+            <input type="radio" name="diet" value="flexitarian" hidden/>
+          </label>
+          <label class="diet-card selected" onclick="selectDiet('omnivore', this)">
+            <div class="diet-icon">🍖</div>
+            <div class="diet-info"><strong>Omnivore</strong><p>Balanced diet</p></div>
+            <div class="diet-co2"><span>3.3t</span><small>CO₂/yr</small></div>
+            <div class="diet-bar" style="--pct:72%"></div>
+            <input type="radio" name="diet" value="omnivore" checked hidden/>
+          </label>
+          <label class="diet-card" onclick="selectDiet('high_meat', this)">
+            <div class="diet-icon">🥩</div>
+            <div class="diet-info"><strong>High Meat</strong><p>Meat every day</p></div>
+            <div class="diet-co2"><span>4.5t</span><small>CO₂/yr</small></div>
+            <div class="diet-bar" style="--pct:100%"></div>
+            <input type="radio" name="diet" value="high_meat" hidden/>
+          </label>
+        </div>
+        <div class="wizard-nav">
+          <button class="wizard-back-btn" onclick="wizardNext(1)">← Back</button>
+          <button class="wizard-next-btn" onclick="wizardNext(3)">Next: Home Energy →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: HOME -->
+      <div class="wizard-step" id="wstep3">
+        <div class="step-header">
+          <div class="step-emoji">🏠</div>
+          <h2>Your home energy use</h2>
+          <p>Heating and electricity are typically the second largest contributor to household emissions.</p>
+        </div>
+        <div class="home-inputs">
+          <div class="home-input-card">
+            <div class="hic-icon">⚡</div>
+            <div class="hic-content">
+              <label>Monthly electricity</label>
+              <div class="hic-slider-wrap">
+                <input type="range" id="calcElec" min="0" max="1000" value="300" class="eco-slider" oninput="document.getElementById('elecVal').textContent=this.value+' kWh'"/>
+                <span id="elecVal">300 kWh</span>
+              </div>
+              <div class="slider-labels"><span>0</span><span>500</span><span>1000 kWh</span></div>
+            </div>
+          </div>
+          <div class="home-input-card">
+            <div class="hic-icon">🔥</div>
+            <div class="hic-content">
+              <label>Monthly gas usage</label>
+              <div class="hic-slider-wrap">
+                <input type="range" id="calcGas" min="0" max="200" value="40" class="eco-slider" oninput="document.getElementById('gasVal').textContent=this.value+' m³'"/>
+                <span id="gasVal">40 m³</span>
+              </div>
+              <div class="slider-labels"><span>0</span><span>100</span><span>200 m³</span></div>
+            </div>
+          </div>
+          <div class="home-input-card">
+            <div class="hic-icon">👨‍👩‍👧‍👦</div>
+            <div class="hic-content">
+              <label>Household size</label>
+              <div class="people-picker">
+                <button type="button" onclick="changePeople(-1)">−</button>
+                <span id="peopleVal">2</span>
+                <button type="button" onclick="changePeople(1)">+</button>
+                <span>people</span>
+              </div>
+              <input type="hidden" id="calcHousehold" value="2"/>
+            </div>
+          </div>
+        </div>
+        <div class="wizard-nav">
+          <button class="wizard-back-btn" onclick="wizardNext(2)">← Back</button>
+          <button class="wizard-next-btn" onclick="runCalculation()">Calculate My Footprint 🌍</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: RESULTS -->
+      <div class="wizard-step" id="wstep4">
+        <div class="results-header">
+          <h2>Your Carbon Footprint</h2>
+          <p>Here's your personalised environmental impact breakdown</p>
+        </div>
+
+        <!-- Score Ring -->
+        <div class="score-ring-wrap">
+          <svg class="score-ring" viewBox="0 0 200 200">
+            <circle class="ring-bg"    cx="100" cy="100" r="80" fill="none" stroke-width="16"/>
+            <circle class="ring-fill"  cx="100" cy="100" r="80" fill="none" stroke-width="16" id="ringFill" stroke-dasharray="502" stroke-dashoffset="502"/>
+            <text x="100" y="88"  text-anchor="middle" class="ring-number" id="ringNumber">0</text>
+            <text x="100" y="108" text-anchor="middle" class="ring-unit">kg CO₂/yr</text>
+            <text x="100" y="130" text-anchor="middle" class="ring-grade" id="ringGrade"></text>
+          </svg>
+          <div class="score-context">
+            <div class="sc-item" id="scComparison"></div>
+            <div class="sc-item" id="scEquivalent"></div>
+          </div>
+        </div>
+
+        <!-- Breakdown Bars -->
+        <div class="breakdown-section">
+          <h3>Where it comes from</h3>
+          <div id="breakdownBars"></div>
+        </div>
+
+        <!-- Tips -->
+        <div class="tips-section" id="tipsSection"></div>
+
+        <!-- Offset CTA -->
+        <div class="carbon-offset-card" id="offsetCard">
+          <div class="coc-left">
+            <div class="coc-icon">🌳</div>
+            <div>
+              <h3>Offset Your Footprint</h3>
+              <p>Invest in verified reforestation projects</p>
+            </div>
+          </div>
+          <div class="coc-right">
+            <div class="coc-price" id="offsetPrice"></div>
+            <div class="coc-trees" id="offsetTrees"></div>
+          </div>
+        </div>
+
+        <div class="results-actions">
+          <button class="btn-primary" onclick="showPage('shop')">Shop Eco Alternatives 🌿</button>
+          <button class="btn-ghost" onclick="wizardReset()">Recalculate</button>
+          <button class="btn-ghost" onclick="openShareModal('carbon','My Carbon Footprint')">Share Results</button>
+        </div>
+      </div>
+
+    </div><!-- end wizard -->
+
+    <!-- COMPARISON SECTION -->
+    <div class="carbon-compare">
+      <h2>How You Compare</h2>
+      <div class="compare-countries">
+        <div class="cc-item"><div class="cc-flag">🇺🇸</div><div class="cc-name">USA</div><div class="cc-bar"><div style="width:100%"></div></div><div class="cc-val">14,500 kg</div></div>
+        <div class="cc-item"><div class="cc-flag">🇬🇧</div><div class="cc-name">UK</div><div class="cc-bar"><div style="width:56%"></div></div><div class="cc-val">8,100 kg</div></div>
+        <div class="cc-item"><div class="cc-flag">🌍</div><div class="cc-name">Global Avg</div><div class="cc-bar"><div style="width:28%"></div></div><div class="cc-val">4,000 kg</div></div>
+        <div class="cc-item cc-target"><div class="cc-flag">🎯</div><div class="cc-name">Climate Target</div><div class="cc-bar target"><div style="width:14%"></div></div><div class="cc-val">2,000 kg</div></div>
+        <div class="cc-item cc-you" id="compareYou" style="display:none"><div class="cc-flag">👤</div><div class="cc-name">You</div><div class="cc-bar you"><div id="youBar" style="width:0%"></div></div><div class="cc-val" id="youVal">-</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="page-recycle" class="page">
+  <div class="recycle-hero"><div class="recycle-hero-icon">♻️</div><h1>Recycle and Earn</h1><p>Schedule a free pickup and earn Eco Points.</p></div>
+  <div class="recycle-stats" id="recycleStats"></div>
+  <div class="recycle-layout">
+    <div class="recycle-types"><h2>What We Accept</h2><div class="type-grid" id="recycleTypeGrid"></div></div>
+    <div class="recycle-form-wrapper">
+      <h2>Schedule a Pickup</h2>
+      <div id="recycleLoginPrompt" style="display:none" class="login-prompt"><p>Please <a href="#" onclick="showPage('login')">sign in</a> to schedule.</p></div>
+      <form id="recycleForm" onsubmit="submitRecycle(event)">
+        <label>Item Description</label><input type="text" id="recycleDesc" placeholder="e.g. Old laptop..." required/>
+        <label>Category</label><select id="recycleType" required><option value="">Select...</option><option value="electronics">Electronics</option><option value="clothing">Clothing</option><option value="plastic">Plastic</option><option value="glass">Glass</option><option value="paper">Paper</option><option value="metal">Metal</option><option value="other">Other</option></select>
+        <label>Pickup Date</label><input type="date" id="recycleDate" required/>
+        <label>Address</label><input type="text" id="recycleAddress" placeholder="123 Green Street..." required/>
+        <button type="submit" class="btn-primary">Schedule Pickup</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="page-login" class="page">
+  <div class="auth-wrapper"><div class="auth-card">
+    <div class="auth-logo">🌿</div><h2>Welcome Back</h2><p>Sign in to EcoMarket</p>
+    <div id="loginError" class="form-error"></div>
+    <form onsubmit="handleLogin(event)">
+      <label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" required/>
+      <label>Password</label><input type="password" id="loginPassword" placeholder="Password" required/>
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+    <div class="auth-divider">or</div>
+    <button class="btn-demo" onclick="demoLogin()">Try Demo Account</button>
+    <p class="auth-switch">No account? <a href="#" onclick="showPage('register')">Create one</a></p>
+  </div></div>
+</div>
+
+<div id="page-register" class="page">
+  <div class="auth-wrapper"><div class="auth-card">
+    <div class="auth-logo">🌿</div><h2>Join EcoMarket</h2><p>Start shopping sustainably</p>
+    <div id="registerError" class="form-error"></div>
+    <form onsubmit="handleRegister(event)">
+      <label>Full Name</label><input type="text" id="regName" placeholder="Jane Smith" required/>
+      <label>Email</label><input type="email" id="regEmail" placeholder="you@example.com" required/>
+      <label>Password</label><input type="password" id="regPassword" placeholder="At least 6 characters" required/>
+      <button type="submit" class="btn-primary">Create Account</button>
+    </form>
+    <p class="auth-switch">Have an account? <a href="#" onclick="showPage('login')">Sign in</a></p>
+  </div></div>
+</div>
+
+<div id="page-profile" class="page"><div class="profile-wrapper"><div class="profile-card"><div class="profile-avatar" id="profileAvatar"></div><div id="profileInfo"></div></div></div></div>
+
+<div id="page-orders" class="page">
+  <div class="orders-wrapper">
+    <div class="orders-header"><h1>My Orders</h1><button class="btn-ghost" onclick="showPage('referral')">Refer a Friend</button></div>
+    <div id="ordersContainer"></div>
+  </div>
+</div>
+
+<div id="page-tracking" class="page">
+  <div class="tracking-wrapper"><button class="back-btn" onclick="showPage('orders')">Back to Orders</button><h1>Order Tracking</h1><div id="trackingContent"></div></div>
+</div>
+
+<div id="page-referral" class="page">
+  <div class="referral-wrapper">
+    <div class="referral-hero"><div class="referral-hero-icon">🎁</div><h1>Refer Friends, Earn Together</h1><p>You both earn <strong>50 Eco Points</strong> when a friend makes their first purchase.</p></div>
+    <div class="referral-card">
+      <h2>Your Referral Link</h2>
+      <div class="referral-link-box"><input type="text" id="referralLink" readonly/><button class="btn-primary" onclick="copyReferralLink()">Copy</button></div>
+      <div class="referral-share"><p>Share via:</p><div class="share-buttons"><button class="share-btn whatsapp" onclick="shareReferral('whatsapp')">WhatsApp</button><button class="share-btn twitter" onclick="shareReferral('twitter')">Twitter</button><button class="share-btn facebook" onclick="shareReferral('facebook')">Facebook</button><button class="share-btn email" onclick="shareReferral('email')">Email</button></div></div>
+      <div class="ref-stats-grid"><div class="ref-stat"><strong>0</strong><span>Friends Referred</span></div><div class="ref-stat"><strong>0</strong><span>Points Earned</span></div><div class="ref-stat"><strong>$0</strong><span>Savings</span></div></div>
+    </div>
+    <div class="referral-how"><h2>How It Works</h2><div class="how-steps"><div class="how-step"><div class="step-num">1</div><strong>Share your link</strong><p>Send to friends</p></div><div class="how-step"><div class="step-num">2</div><strong>Friend signs up</strong><p>Using your link</p></div><div class="how-step"><div class="step-num">3</div><strong>Both earn points</strong><p>50 Eco Points each</p></div></div></div>
+  </div>
+</div>
+
+<div id="page-checkout" class="page">
+  <div class="checkout-wrapper">
+    <h1>Checkout</h1>
+    <div class="checkout-layout">
+      <div class="checkout-form">
+        <h2>Shipping Details</h2>
+        <input type="text" id="shipName" placeholder="Full Name"/><input type="text" id="shipAddress" placeholder="Street Address"/><input type="text" id="shipCity" placeholder="City"/><input type="text" id="shipZip" placeholder="Postal Code"/>
+        <h2>Payment</h2>
+        <input type="text" id="cardNumber" placeholder="Card Number (4242 4242 4242 4242)" maxlength="19"/>
+        <div class="card-row"><input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"/><input type="text" id="cardCvv" placeholder="CVV" maxlength="3"/></div>
+        <h2>Coupon Code</h2>
+        <div class="coupon-row"><input type="text" id="couponInput" placeholder="Enter coupon code" style="text-transform:uppercase"/><button type="button" onclick="applyCoupon()" class="btn-primary">Apply</button></div>
+        <div id="couponMessage"></div>
+        <div class="carbon-offset-toggle"><div><strong>Offset this order carbon</strong><p>Add $1.50 to plant trees</p></div><label class="toggle"><input type="checkbox" id="carbonOffset" checked/><span class="toggle-slider"></span></label></div>
+        <button class="btn-primary" style="width:100%;margin-top:16px" onclick="placeOrder()">Place Order</button>
+      </div>
+      <div class="checkout-summary" id="checkoutSummary"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-admin" class="page">
+  <div class="admin-wrapper">
+    <div class="admin-header"><h1>Admin Dashboard</h1>
+      <div class="admin-tabs"><button class="admin-tab active" onclick="adminTab('overview',this)">Overview</button><button class="admin-tab" onclick="adminTab('products',this)">Products</button><button class="admin-tab" onclick="adminTab('orders',this)">Orders</button><button class="admin-tab" onclick="adminTab('users',this)">Users</button></div>
+    </div>
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+</main>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeQuickView()"></div>
+<div class="quick-view-modal" id="quickViewModal"><button class="modal-close" onclick="closeQuickView()">X</button><div id="quickViewContent"></div></div>
+
+<div class="modal-overlay" id="shareOverlay" onclick="closeShareModal()"></div>
+<div class="share-modal" id="shareModal"><button class="modal-close" onclick="closeShareModal()">X</button><h3>Share This Product</h3><p id="shareProductName"></p><div class="share-buttons" id="shareModalButtons"></div><div class="share-link-box"><input type="text" id="shareLink" readonly/><button onclick="copyShareLink()">Copy</button></div></div>
+
+<div class="modal-overlay" id="reviewOverlay" onclick="closeReviewModal()"></div>
+<div class="review-modal" id="reviewModal"><button class="modal-close" onclick="closeReviewModal()">X</button><h3>Write a Review</h3><div class="star-picker" id="starPicker"></div><input type="text" id="reviewTitle" placeholder="Review title"/><textarea id="reviewBody" placeholder="Share your experience..." rows="4"></textarea><button class="btn-primary" onclick="submitReview()">Submit Review</button></div>
+
+<div id="confettiContainer"></div>
+<button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode"><span class="sun-icon">Sun</span><span class="moon-icon">Moon</span></button>
+<div class="page-transition" id="pageTransition"></div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header"><h2>Your Cart</h2><button onclick="toggleCart()">X</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="/js/app.js"></script>
+</body>
+</html>
